@@ -1,5 +1,8 @@
 package fr.humanapp.meilisearch.exception
 
+/**
+ * Base Exception class for all Meilisearch-related exceptions and errors
+ */
 open class MeilisearchException : Exception {
 	constructor() : super("Generic Meilisearch exception")
 
