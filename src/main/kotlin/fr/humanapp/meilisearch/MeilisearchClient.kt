@@ -22,6 +22,7 @@ public class MeilisearchClient(private val config: MeilisearchConfig) {
 	 *
 	 * @return Newly created index in the Meilisearch instance
 	 */
+	@JvmOverloads
 	@Throws(MeilisearchException::class)
 	fun createIndex(name: String, primaryKey: String = "id"): Any {
 		TODO("Method not implemented")
