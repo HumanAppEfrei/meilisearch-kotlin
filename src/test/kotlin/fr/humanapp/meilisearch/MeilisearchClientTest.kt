@@ -1,5 +1,6 @@
 package fr.humanapp.meilisearch
 
+import fr.humanapp.meilisearch.exception.IndexNotFoundException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
@@ -31,7 +32,7 @@ internal class MeilisearchClientTest {
 	@Test
 	@Order(4)
 	fun `getIndex() Cannot retrieve non-existing index`() {
-		assertThrows(Exception::class.java) {
+		assertThrows(IndexNotFoundException::class.java) {
 			msc.getIndex("__no_existing_index")
 		}
 	}
