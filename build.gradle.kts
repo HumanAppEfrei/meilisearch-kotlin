@@ -10,12 +10,14 @@ repositories {
 }
 
 dependencies {
-	implementation(kotlin("stdlib"))
-	implementation(kotlin("test"))
-	implementation(kotlin("test-junit"))
-
 	implementation(kotlin("stdlib-jdk8"))
 
+	// Gson
+	implementation("com.google.code.gson:gson:2.8.6")
+
+	// Junit
+	implementation(kotlin("test"))
+	implementation(kotlin("test-junit"))
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 	testRuntimeOnly("org.junit.platform:junit-platform-console:1.7.0")
