@@ -1,5 +1,7 @@
 package fr.humanapp.meilisearch
 
+import fr.humanapp.meilisearch.exception.IndexNotFoundException
+
 
 /**
  * Wrapper class to interact with a Meilisearch database instance
@@ -15,7 +17,7 @@ public class MeilisearchClient(private val config: MeilisearchConfig) {
 		TODO("Method not implemented")
 	}
 
-	@Throws(Exception::class)
+	@Throws(IndexNotFoundException::class)
 	fun getIndex(s: String): Any {
 		TODO("Method not implemented")
 	}
