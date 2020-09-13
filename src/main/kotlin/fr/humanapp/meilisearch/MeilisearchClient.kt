@@ -1,24 +1,41 @@
 package fr.humanapp.meilisearch
 
 import fr.humanapp.meilisearch.exception.IndexNotFoundException
+import fr.humanapp.meilisearch.exception.MeilisearchException
+import java.lang.Exception
 
 
 /**
  * Wrapper class to interact with a Meilisearch database instance
  */
 public class MeilisearchClient(private val config: MeilisearchConfig) {
-	constructor(host: String) : this(MeilisearchConfig(host))
+	@Throws(MeilisearchException::class)
+	constructor(host: String) : this(MeilisearchConfig(host)) {
+		TODO("Test connection to Meilisearch host not implemented")
+	}
 
-	 init {
-		 // TODO("Test connection to Meilisearch host")
-	 }
-
-	fun createIndex(name: String, primaryKey: String = "id") {
+	/**
+	 * Create an index
+	 *
+	 * @param name Name of the index to create
+	 * @param primaryKey ID field for documents in that index (all documents must contain this key with a different value)
+	 *
+	 * @return Newly created index in the Meilisearch instance
+	 */
+	@Throws(MeilisearchException::class)
+	fun createIndex(name: String, primaryKey: String = "id"): Any {
 		TODO("Method not implemented")
 	}
 
+	/**
+	 * Retrieve an index
+	 *
+	 * @param name Name of the index to retrieve
+	 *
+	 * @return Index from the Meilisearch instance
+	 */
 	@Throws(IndexNotFoundException::class)
-	fun getIndex(s: String): Any {
+	fun getIndex(name: String): Any {
 		TODO("Method not implemented")
 	}
 
