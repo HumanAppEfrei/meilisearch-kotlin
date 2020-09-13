@@ -1,6 +1,8 @@
 package fr.humanapp.meilisearch.exception
 
-abstract class MeilisearchException : Exception {
+open class MeilisearchException : Exception {
+	constructor() : super("Generic Meilisearch exception")
+
 	constructor(message: String) : super(message)
 
 	constructor(cause: Throwable) : super(cause)
