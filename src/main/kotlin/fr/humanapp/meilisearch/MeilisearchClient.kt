@@ -22,7 +22,24 @@ public class MeilisearchClient(private val config: MeilisearchConfig) {
 		TODO("Method not implemented")
 	}
 
+	/**
+	 * Dynamically get or create an index with default primaryKey (if it does not exist)
+	 *
+	 * @param name Name of the index to get or create
+	 *
+	 * @return Found or created index from the Meilisearch instance
+	 */
+	@Throws(MeilisearchException::class)
 	fun index(name: String): Any? {
-		TODO("Method not implemented")
+		return try {
+			getIndex(name)
+		} catch (notFound: IndexNotFoundException) {
+			try {
+				createIndex(name)
+				getIndex(name)
+			} catch (e: Exception) {
+				throw MeilisearchException()
+			}
+		}
 	}
 }
