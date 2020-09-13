@@ -1,0 +1,13 @@
+# IDEs
+.idea/
+.vscode/
+
+# Gradle
+.gradle/
+
+# Build files
+build/
+out/
+target/
+dist/
+compile/
