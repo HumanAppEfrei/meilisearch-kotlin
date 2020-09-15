@@ -1,8 +1,6 @@
 package fr.humanapp.meilisearch
 
-import fr.humanapp.meilisearch.exception.MeilisearchException
 import java.net.UnknownHostException
-
 
 /**
  * Wrapper class representing the configuration for a MeilisearchClient instance
