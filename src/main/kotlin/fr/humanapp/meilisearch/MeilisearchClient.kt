@@ -13,9 +13,8 @@ public class MeilisearchClient(private val config: MeilisearchConfig) {
 	constructor(host: String) : this(MeilisearchConfig(host))
 
 	init {
-		println("This is a test")
 		// Attempt to GET /health endpoint
-		this.config.host.httpGet().response {
+		this.config.healthPath.httpGet().response {
 				_, response, _ ->
 			if (response.statusCode != 200) throw MeilisearchException("Unable to reach \"${this.config.host}/health\"")
 		}

@@ -16,4 +16,11 @@ public class MeilisearchConfig @JvmOverloads constructor(host: String, private v
 		if (!httpRegex.matches(host)) throw UnknownHostException("Invalid host \"$host\"")
 		this.host = removeTrailingSlash(host)
 	}
+
+	val healthPath = "$host/health"
+	val indexesPath = "$host/indexes"
+
+	fun indexPath(name: String) = "$indexesPath/$name"
+	fun indexSearchPath(name: String) = "${indexPath(name)}/search"
+	fun indexStatsPath(name: String) = "${indexPath(name)}/stats"
 }
