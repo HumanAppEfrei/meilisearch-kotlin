@@ -1,23 +1,46 @@
 package fr.humanapp.meilisearch
 
+import com.github.kittinunf.fuel.httpDelete
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.fuel.httpPost
+import com.google.gson.Gson
+import com.github.kittinunf.result.Result
+
+import fr.humanapp.meilisearch.dto.IndexDto
 import fr.humanapp.meilisearch.exception.IndexNotFoundException
 import fr.humanapp.meilisearch.exception.MeilisearchException
-import java.lang.Exception
 
 /**
  * Wrapper class to interact with a Meilisearch database instance
  */
 public class MeilisearchClient(private val config: MeilisearchConfig) {
+	private val gson: Gson = Gson()
+
 	@Throws(MeilisearchException::class)
 	constructor(host: String) : this(MeilisearchConfig(host))
 
 	init {
-		// Attempt to GET /health endpoint
+		// Asynchronously attempt to GET /health endpoint
 		this.config.healthPath.httpGet().response {
 				_, response, _ ->
 			if (response.statusCode != 200) throw MeilisearchException("Unable to reach \"${this.config.host}/health\"")
 		}
+	}
+
+	/**
+	 * Retrieve an index
+	 *
+	 * @param name Name of the index to retrieve
+	 *
+	 * @return Index from the Meilisearch instance
+	 */
+	@Throws(IndexNotFoundException::class)
+	fun getIndex(name: String): MeilisearchIndex {
+		val (_, _, result) = this.config.indexPath(name).httpGet().responseString()
+
+		if (result is Result.Failure) throw IndexNotFoundException("Cannot find index $name", result.getException())
+
+		return gson.fromJson(result.get(), MeilisearchIndex::class.java)
 	}
 
 	/**
@@ -31,19 +54,16 @@ public class MeilisearchClient(private val config: MeilisearchConfig) {
 	@JvmOverloads
 	@Throws(MeilisearchException::class)
 	fun createIndex(name: String, primaryKey: String = "id"): MeilisearchIndex {
-		TODO("Method not implemented")
-	}
+		val indexToCreate = IndexDto(uid = name, primaryKey = primaryKey)
 
-	/**
-	 * Retrieve an index
-	 *
-	 * @param name Name of the index to retrieve
-	 *
-	 * @return Index from the Meilisearch instance
-	 */
-	@Throws(IndexNotFoundException::class)
-	fun getIndex(name: String): MeilisearchIndex {
-		TODO("Method not implemented")
+		// Call Meilisearch REST API to create index
+		val (_, _, result) = this.config.indexesPath.httpPost()
+			.body(gson.toJson(indexToCreate))
+			.responseString()
+
+		if (result is Result.Failure) throw MeilisearchException("Unable to create index $name", result.getException())
+
+		return this.getIndex(name)
 	}
 
 	/**
@@ -64,6 +84,16 @@ public class MeilisearchClient(private val config: MeilisearchConfig) {
 			} catch (e: Exception) {
 				throw MeilisearchException()
 			}
+		}
+	}
+
+	@Throws(MeilisearchException::class)
+	fun deleteIndex(name: String) {
+		// Call Meilisearch REST API to delete index
+		val (_, _, result) = this.config.indexPath(name).httpDelete().response()
+
+		if (result is Result.Failure) {
+			throw MeilisearchException("Error while deleting index $name", result.getException())
 		}
 	}
 }
