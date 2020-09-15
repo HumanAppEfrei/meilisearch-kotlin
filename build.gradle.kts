@@ -7,6 +7,7 @@ version = "0.0.1-SNAPSHOT"
 
 repositories {
 	mavenCentral()
+	jcenter()
 }
 
 dependencies {
@@ -14,6 +15,9 @@ dependencies {
 
 	// Gson
 	implementation("com.google.code.gson:gson:2.8.6")
+
+	// Fuel (HTTP)
+	implementation("com.github.kittinunf.fuel:fuel:2.2.3")
 
 	// Junit
 	implementation(kotlin("test"))
