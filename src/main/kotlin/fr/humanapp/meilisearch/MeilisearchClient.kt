@@ -1,17 +1,24 @@
 package fr.humanapp.meilisearch
 
+import com.github.kittinunf.fuel.httpGet
 import fr.humanapp.meilisearch.exception.IndexNotFoundException
 import fr.humanapp.meilisearch.exception.MeilisearchException
 import java.lang.Exception
-
 
 /**
  * Wrapper class to interact with a Meilisearch database instance
  */
 public class MeilisearchClient(private val config: MeilisearchConfig) {
 	@Throws(MeilisearchException::class)
-	constructor(host: String) : this(MeilisearchConfig(host)) {
-		TODO("Test connection to Meilisearch host not implemented")
+	constructor(host: String) : this(MeilisearchConfig(host))
+
+	init {
+		println("This is a test")
+		// Attempt to GET /health endpoint
+		this.config.host.httpGet().response {
+				_, response, _ ->
+			if (response.statusCode != 200) throw MeilisearchException("Unable to reach \"${this.config.host}/health\"")
+		}
 	}
 
 	/**
