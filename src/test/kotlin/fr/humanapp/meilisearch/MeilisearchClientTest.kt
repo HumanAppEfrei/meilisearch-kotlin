@@ -46,4 +46,12 @@ internal class MeilisearchClientTest {
 		// With non-existing index
 		assertNotNull(msc.index("__test_index_3"))
 	}
+
+	@Test
+	@Order(6)
+	fun `deleteIndex() can delete indexes`() {
+		for (i in 1..3) {
+			msc.deleteIndex("__test_index_$i")
+		}
+	}
 }
