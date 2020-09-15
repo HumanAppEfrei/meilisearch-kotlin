@@ -18,6 +18,7 @@ dependencies {
 
 	// Fuel (HTTP)
 	implementation("com.github.kittinunf.fuel:fuel:2.2.3")
+	implementation("com.github.kittinunf.fuel:fuel-gson:2.2.3")
 
 	// Junit
 	implementation(kotlin("test"))
