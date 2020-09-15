@@ -1,5 +1,6 @@
 package fr.humanapp.meilisearch
 
+import com.github.kittinunf.fuel.gson.responseObject
 import com.github.kittinunf.fuel.httpDelete
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
@@ -36,11 +37,11 @@ public class MeilisearchClient(private val config: MeilisearchConfig) {
 	 */
 	@Throws(IndexNotFoundException::class)
 	fun getIndex(name: String): MeilisearchIndex {
-		val (_, _, result) = this.config.indexPath(name).httpGet().responseString()
+		val (_, _, result) = this.config.indexPath(name).httpGet().responseObject<MeilisearchIndex>()
 
-		if (result is Result.Failure) throw IndexNotFoundException("Cannot find index $name", result.getException())
+		if (result is Result.Failure<*>) throw IndexNotFoundException("Cannot find index $name", result.getException())
 
-		return gson.fromJson(result.get(), MeilisearchIndex::class.java)
+		return result.get()
 	}
 
 	/**
