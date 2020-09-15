@@ -11,7 +11,9 @@ import org.junit.Assert.assertThat
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 internal class MeilisearchClientTest {
-	private val msc = MeilisearchClient("http://localhost:7700")
+	private companion object {
+		val msc = MeilisearchClient("http://localhost:7700")
+	}
 
 	@Test
 	@Order(1)
