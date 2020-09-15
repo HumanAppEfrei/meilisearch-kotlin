@@ -1,6 +1,7 @@
 package fr.humanapp.meilisearch
 
 import fr.humanapp.meilisearch.exception.MeilisearchException
+import java.net.UnknownHostException
 
 
 /**
@@ -14,7 +15,7 @@ public class MeilisearchConfig @JvmOverloads constructor(host: String, private v
 	private fun removeTrailingSlash(host: String) = Regex("/*$").replace(host, "")
 
 	init {
-		if (!httpRegex.matches(host)) throw MeilisearchException("Invalid host \"$host\"")
+		if (!httpRegex.matches(host)) throw UnknownHostException("Invalid host \"$host\"")
 		this.host = removeTrailingSlash(host)
 	}
 }
