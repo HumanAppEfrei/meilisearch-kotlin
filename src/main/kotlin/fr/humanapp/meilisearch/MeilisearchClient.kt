@@ -24,7 +24,7 @@ public class MeilisearchClient(private val config: MeilisearchConfig) {
 	 */
 	@JvmOverloads
 	@Throws(MeilisearchException::class)
-	fun createIndex(name: String, primaryKey: String = "id"): Any {
+	fun createIndex(name: String, primaryKey: String = "id"): MeilisearchIndex {
 		TODO("Method not implemented")
 	}
 
@@ -36,7 +36,7 @@ public class MeilisearchClient(private val config: MeilisearchConfig) {
 	 * @return Index from the Meilisearch instance
 	 */
 	@Throws(IndexNotFoundException::class)
-	fun getIndex(name: String): Any {
+	fun getIndex(name: String): MeilisearchIndex {
 		TODO("Method not implemented")
 	}
 
@@ -48,7 +48,7 @@ public class MeilisearchClient(private val config: MeilisearchConfig) {
 	 * @return Found or created index from the Meilisearch instance
 	 */
 	@Throws(MeilisearchException::class)
-	fun index(name: String): Any? {
+	fun index(name: String): MeilisearchIndex {
 		return try {
 			getIndex(name)
 		} catch (notFound: IndexNotFoundException) {
