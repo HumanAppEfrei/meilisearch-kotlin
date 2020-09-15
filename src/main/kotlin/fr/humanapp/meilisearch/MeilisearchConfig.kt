@@ -20,8 +20,8 @@ public class MeilisearchConfig @JvmOverloads constructor(host: String, private v
 	val healthPath = "$host/health"
 	val indexesPath = "$host/indexes"
 
-	fun indexPath(name: String) = "$indexesPath/$name"
-	fun indexDocumentsPath(name: String) = "${indexPath(name)}/documents"
-	fun indexSearchPath(name: String) = "${indexPath(name)}/search"
-	fun indexStatsPath(name: String) = "${indexPath(name)}/stats"
+	fun indexPath(uid: String) = "$indexesPath/$uid"
+	fun indexDocumentsPath(uid: String) = "${indexPath(uid)}/documents"
+	fun indexSearchPath(uid: String) = "${indexPath(uid)}/search"
+	fun indexStatsPath(uid: String) = "${indexPath(uid)}/stats"
 }
