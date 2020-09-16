@@ -41,7 +41,9 @@ public class MeilisearchClient(private val config: MeilisearchConfig) {
 
 		if (result is Result.Failure<*>) throw IndexNotFoundException("Cannot find index $name", result.getException())
 
-		return result.get()
+		val index = result.get()
+		index.config = this.config
+		return index
 	}
 
 	/**
