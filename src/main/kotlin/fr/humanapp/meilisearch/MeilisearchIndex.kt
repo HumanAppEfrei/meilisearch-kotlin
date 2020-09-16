@@ -52,9 +52,8 @@ public class MeilisearchIndex(
 		// Need to serialize by hand because nesting generics will cause compiler problems
 		val docsAsJson = gson.toJson(documents, object : TypeToken<T>() {}.type)
 
-		val (request, response, result) = this.config.indexDocumentsPath(this.uid).httpPost()
-			.header("Content-Length", docsAsJson.length)
-			.jsonBody(docsAsJson)
+		val (_, _, result) = this.config.indexDocumentsPath(this.uid).httpPost()
+			.body(docsAsJson)
 			.responseString()
 
 		if (result is Result.Failure) throw MeilisearchException("Unknown error while inserting documents in index $uid", result.getException())
