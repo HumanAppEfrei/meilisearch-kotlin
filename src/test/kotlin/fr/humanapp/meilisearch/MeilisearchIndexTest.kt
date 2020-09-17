@@ -6,7 +6,7 @@ import org.junit.Assert.assertThat
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matchers.*
 import org.hamcrest.CoreMatchers.`is` as _is
-import org.hamcrest.CoreMatchers.`not` as _not
+import org.hamcrest.CoreMatchers.not as _not
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class MeilisearchIndexTest {
@@ -42,6 +42,7 @@ class MeilisearchIndexTest {
 	@Test
 	@Order(3)
 	fun `Getting documents should work`() {
+		Thread.sleep(5L)  // To ensure all documents have been written to Meilisearch
 		val documents = index.getDocuments<TestBook>()
 		assertThat(documents, containsInAnyOrder(book1, book2, book3))
 		assertThat(documents, _not(contains(book4)))
@@ -50,6 +51,17 @@ class MeilisearchIndexTest {
 	@Test
 	@Order(4)
 	fun `Deleting documents should work`() {
-		TODO("Documents deletion test not implemented")
+		index.deleteDocument(book1.id)
+		Thread.sleep(5L)
+
+		val docs1 = index.getDocuments<TestBook>()
+		assertThat(docs1, _not(contains(book1)))
+		assertThat(docs1, containsInAnyOrder(book2, book3))
+
+		index.deleteDocuments(book2.id, book3.id)
+		Thread.sleep(5L)
+
+		val docs2 = index.getDocuments<TestBook>()
+		assertThat(docs2, _is(empty()))
 	}
 }
