@@ -24,4 +24,5 @@ public class MeilisearchConfig @JvmOverloads constructor(host: String, private v
 	fun indexDocumentsPath(uid: String) = "${indexPath(uid)}/documents"
 	fun indexSearchPath(uid: String) = "${indexPath(uid)}/search"
 	fun indexStatsPath(uid: String) = "${indexPath(uid)}/stats"
+	fun documentPath(indexUid: String, docId: String) = "${indexDocumentsPath(indexUid)}/$docId"
 }
