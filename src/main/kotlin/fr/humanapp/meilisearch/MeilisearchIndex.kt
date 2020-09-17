@@ -1,16 +1,16 @@
 package fr.humanapp.meilisearch
 
-import com.github.kittinunf.fuel.gson.jsonBody
 import com.github.kittinunf.fuel.gson.responseObject
+import com.github.kittinunf.fuel.httpDelete
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import fr.humanapp.meilisearch.dto.IndexDto
-import fr.humanapp.meilisearch.exception.MeilisearchException
 import java.io.FileNotFoundException
 import java.util.*
+import fr.humanapp.meilisearch.dto.IndexDto
+import fr.humanapp.meilisearch.exception.MeilisearchException
 
 public class MeilisearchIndex(
 	uid: String,
@@ -25,7 +25,7 @@ public class MeilisearchIndex(
 	}
 
 	@Throws(MeilisearchException::class)
-	fun <T> getDocuments(): List<T> {
+	inline fun <reified T> getDocuments(): List<T> {
 		val (_, _, result) = this.config.indexDocumentsPath(this.uid).httpGet().responseObject<List<T>>()
 
 		if (result is Result.Failure)
@@ -49,13 +49,39 @@ public class MeilisearchIndex(
 
 	@Throws(MeilisearchException::class)
 	fun <T> insert(vararg documents: T) {
-		// Need to serialize by hand because nesting generics will cause compiler problems
-		val docsAsJson = gson.toJson(documents, object : TypeToken<T>() {}.type)
-
 		val (_, _, result) = this.config.indexDocumentsPath(this.uid).httpPost()
-			.body(docsAsJson)
+			.body(documents.map {
+				gson.toJson(it, object : TypeToken<T>() {}.type)
+			}.toString())
 			.responseString()
 
 		if (result is Result.Failure) throw MeilisearchException("Unknown error while inserting documents in index $uid", result.getException())
+	}
+
+	@Throws(MeilisearchException::class, FileNotFoundException::class)
+	fun deleteDocument(id: String) {
+		val (_, response, result) = this.config.documentPath(this.uid, docId = id).httpDelete().response()
+
+		if (result is Result.Failure) {
+			throw when(response.statusCode) {
+				404 -> FileNotFoundException("Document $id does not exist in index ${this.uid}")
+				else -> MeilisearchException("Unknown error while deleting document $id from index ${this.uid}", result.getException())
+			}
+		}
+	}
+
+	@Throws(MeilisearchException::class, FileNotFoundException::class)
+	fun deleteDocument(id: Number) {
+		this.deleteDocument(id.toString())
+	}
+
+	@Throws(MeilisearchException::class, FileNotFoundException::class)
+	fun deleteDocuments(vararg ids: String) = ids.forEach {
+		deleteDocument(it)
+	}
+
+	@Throws(MeilisearchException::class, FileNotFoundException::class)
+	fun deleteDocuments(vararg ids: Number) = ids.forEach {
+		deleteDocument(it)
 	}
 }
