@@ -1,5 +1,6 @@
 package fr.humanapp.meilisearch
 
+import fr.humanapp.meilisearch.container.KGenericContainer
 import fr.humanapp.meilisearch.exception.IndexNotFoundException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.MethodOrderer
@@ -8,11 +9,24 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.hamcrest.CoreMatchers.*
 import org.junit.Assert.assertThat
+import org.testcontainers.containers.wait.strategy.Wait
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+@Testcontainers
 internal class MeilisearchClientTest {
 	private companion object {
-		val msc = MeilisearchClient("http://localhost:7700")
+		@Container
+		private val container = KGenericContainer("getmeili/meilisearch")
+			.withExposedPorts(7700)
+			.waitingFor(Wait.defaultWaitStrategy())
+
+		init {
+			container.start()
+		}
+
+		val msc = MeilisearchClient("http://${container.host}:${container.getMappedPort(7700)}")
 	}
 
 	@Test
