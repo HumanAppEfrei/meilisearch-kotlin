@@ -1,18 +1,36 @@
 package fr.humanapp.meilisearch
 
+import fr.humanapp.meilisearch.container.KDockerComposeContainer
 import fr.humanapp.meilisearch.model.TestBook
 import org.junit.jupiter.api.*
 import org.junit.Assert.assertThat
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matchers.*
+import org.testcontainers.containers.wait.strategy.Wait
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
+import java.io.File
 import org.hamcrest.CoreMatchers.`is` as _is
 import org.hamcrest.CoreMatchers.not as _not
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+@Testcontainers
 class MeilisearchIndexTest {
 	private companion object {
+		@Container
+		private val container: KDockerComposeContainer = KDockerComposeContainer(File("src/test/resources/test-compose.yml"))
+			.withExposedService("meilisearch_1", 7700, Wait.forHttp("/").forStatusCode(200))
+			.withLocalCompose(true)
+
+		init {
+			container.start()
+		}
+
+		private val host = container.getServiceHost("meilisearch_1", 7700)
+		private val port = container.getServicePort("meilisearch_1", 7700)
+
 		private const val uid = "__test_books"
-		private val msc = MeilisearchClient("http://localhost:7700")
+		private val msc = MeilisearchClient("http://$host:$port")
 		private val index = msc.createIndex(uid)
 
 		private val book1 = TestBook(1, "1984", "George Orwell", "Big Brother is watching you")
