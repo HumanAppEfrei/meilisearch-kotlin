@@ -29,6 +29,10 @@ dependencies {
 
 	// Hamcrest
 	testImplementation("org.hamcrest:hamcrest:2.2")
+
+	// testcontainers
+	testImplementation("org.testcontainers:testcontainers:1.14.3")
+	testImplementation("org.testcontainers:junit-jupiter:1.14.3")
 }
 
 
